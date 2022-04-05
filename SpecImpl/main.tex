@@ -1,0 +1,104 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{tcolorbox}
+
+\title{Specyfikacja implementacyjna}
+\author{Piotr Szumański}
+\date{Listopad 2020}
+
+\begin{document}
+
+\maketitle
+
+\section{Informacje ogólne}
+\begin{enumerate}
+    \item Nazwa programu
+    \\ Projekt indywidualny 2020
+    \item Poruszany problem
+    \\ Minimalizacja kosztów sprzedaży szczepionek przy jednoczesnym zapewnieniu dostaw do wszystkich aptek.
+\end{enumerate}
+
+\section{Wstęp}
+W projekcie mamy doczynienia z jednym z rodzaju problemu marszrutyzacji. W związku z tym znalezienie idealnego rozwiązania nie jest takie proste i oczywiste. Dlatego w moim projekcie zastosuje jeden z algorytmów heurystycznych, które jest rozwiązaniem problemu dla niektórych kombinacji danych.
+
+\section{Opis działania programu}
+    \begin{enumerate}
+        \item Program prosi użytkownika o podanie ścieżki do pliku z danymi
+        \item Pobiera dane z podanego pliku za pomocą klasy FileReader i wpisuje je do odpowiednich list w klasie Result w zależności od rodzaju danych (lista producentów, aptek czy połączeń)
+        \item Po pobraniu danych do list, sortuje listę połączeń po cenie (od najtańszego) za pomocą Collection.sort
+        \item Następnie iteruje po tej liście połączeń i najpierw pobiera dane producenta i apteki, których id jest w rozpatrywanym połączeniu
+        \item Wybiera najmniejszą z trzech wartości 
+        \begin{itemize}
+            \item dziennej produkcji
+            \item dziennego zapotrzebowania
+            \item maksymalnej liczby dostarczanych szczepionek
+        \end{itemize}
+        \item Wstawiamy odpowiednie wartości do pliku wynikowego (wynik.txt), a mianowicie:
+            \begin{tcolorbox}
+                 Producent X $->$ Apteka Y [Koszt = (najm. watość) * (cena) = wynik]
+            \end{tcolorbox}
+        \item Dodajemy wynik do sumy opłat całkowitych
+        \item Użytą najmniejszą wartość odejmujemy od dziennej produkcji i dziennego zapotrzebowania
+        \item Bierzemy następne połączenie
+        \item Po iteracji wstawiamy sumę opłat do pliku z wynikami jako: 
+            \begin{tcolorbox}
+                Opłaty całkowite: "suma" zł
+            \end{tcolorbox}
+        \\ W przypadku błednych danych w dokumencie czy źle napisanej ścieżki do pliku program natychmiast powiadomi użytkownika o błedzie
+    \end{enumerate}
+
+\section{Opis obiektów}
+W tych obiektach występują odpowiednie konstruktory oraz gettery dla wszystkich podanych zmiennych.
+    \item Manufacturer - obiekt producent
+        \begin{itemize}
+        \item int id - id producenta
+        \item String name - nazwa producenta
+        \iten int dailyProduction - dzienna produkcja (do tej zmiennej używany jest dodatkowo setter)
+    \end{itemize}
+    \item Pharmacy - obiekt apteka
+        \begin{itemize}
+            \item int id - id apteki
+            \item String name - nazwa apteki
+            \item int dailyRequire - dzienne zapotrzebowanie (do tej zmiennej używany jest dodatkowo setter)
+        \end{itemize}
+    \item Connection - obiekt połączenie, które implementuje interfejs Comparator$<$Connection$>$
+        \begin{itemize}
+            \item int idM - id producenta
+            \item int idP - id apteki
+            \item int maxDaily - dzienna maksymalna liczba dostaczanych szczepionek
+            \item double price - cena
+            \item compareTo() - metoda nadpisana od Comparatora, napisana by porównywała połączenia po cenie, a w przydadku remisu porównywała po max. liczbie dostarczeń (odwrotnie jak cena)
+        \end{itemize}
+    
+\section{Opis klas i metod}
+\begin{enumerate}
+    \item Main - klasa z główną metodą inicjalizującą działanie programu
+    \begin{itemize}
+        \item main() - prosi o wprowadzenie ścieżki pliku oraz wywołuje klasę Result 
+    \end{itemize}
+    \item Result - oblicza najlepszą możliwość na podstawie dostarczonej ścieżki do pliku i wysyła ją do pliku wynik.txt
+    \begin{itemize}
+        \item void calculate() - metoda z algorytmem 
+        \item Manufacturer findManufacturer(int idM) - zwraca producenta na podstawie id producenta z danego połączenia
+        \item Pharmacy findPharmacy(int idP) - zwraca aptekę na podstawie id apteki z listy połączeń
+        \item int minValueOfThree(int a, int b, int c) - zwraca najmniejszą z trzech podanych wartości
+        \item void writeAnwser(String line) - wysyła podany ciąg znaków do pliku wynik.txt
+    \end{itemize}
+    \item FileReader - wczytuje odpowiednie dane do danych list: 
+    \begin{itemize}
+        \item List$<$Manufacturer$>$ manufacturers - lista producentów          \item List$<$Pharmacy$>$ pharmacies - lista aptek
+        \item List$<$Connection$>$ connections - lista połączeń
+    \end{itemize}
+    \\Dla tych list zostaną dodane gettery, aby klasa Result miała do nich dostęp.
+     \begin{itemize}
+        \item loadData(String filePath) - metoda do wczytywania danych z pliku na podstawie podanej ścieżki, wywoływana w klasie Result
+        \item void addManufacturer(String line) - dodaje nowo wytworzonego producenta do listy producentów, pobiera dane z danego ciągu znaków
+        \item void addPharmacy(String line) - dodaje nowo wytworzoną aptekę do listy aptek, pobiera dane z danego ciągu znaków
+        \item void addConnection(String line) - dodaje nowo wytworzone połączenie do listy połączeń, pobiera dane z danego ciągu znaków
+    \end{itemize}
+\end{enumerate}
+
+\section{Zakończenie}
+W przydadku powodzenia się tego algorytmu możliwa jest opcja dodania jeszcze jednego algorytmu dla zwiększenia prawdopodobienstwa znalezienia poprawnej konfiguracji oraz dodania testów dla każdego z tych algorytmów.
+
+\end{document}

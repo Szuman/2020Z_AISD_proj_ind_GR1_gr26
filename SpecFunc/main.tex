@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{tcolorbox}
+
+\title{Specyfikacja funcjonalna}
+\author{Piotr Szumański}
+\date{Listopad 2020}
+
+\begin{document}
+
+\maketitle
+
+\section{Opis ogólny}
+\begin{enumerate}
+    \item Nazwa programu
+    \\ Projekt indywidualny 2020
+    \item Poruszany problem
+    \\ Minimalizacja kosztów sprzedaży szczepionek przy jednoczesnym zapewnieniu dostaw do wszystkich aptek.
+    \item Użytkownik docelowy
+    \\ Grupa menadżerska sieci aptek
+\end{enumerate}
+
+\section{Opis Funkcjonalności}
+\begin{enumerate}
+    \item Jak korzystać z programu?
+    \\Należy za pomocą wiersza poleceń dostać się do katalogu z programem i potem go uruchomić. 
+    \item Uruchamianie programu
+    \\Aby uruchomić program należy w wierszu poleceń napisać komendę:
+    \begin{tcolorbox}
+    java -jar Main.jar
+    \end{tcolorbox}
+    \\Potem program powinien poprosić o nazwę (ścieżkę) pliku, którego ma skonfigurować. Następnie program stworzy plik z wynikiem o nazwie wynik.txt.
+    \item Możliwości programu
+    \\Program, na podstawie dostarczonego mu pliku, będzie znajdował konfigurację, w której koszty sprzedaży będą najmniejsze.
+\end{enumerate}
+
+\section{Format danych i struktura plików}
+\begin{enumerate}
+    \item Przechowywanie danych w programie
+    \\Dane wyjściowe w postaci pliku wynik.txt powinien być w katalogu głównym
+    \item Dane wejściowe
+    \\Plik formatu .txt z wymaganiami dotyczącymi zapotrzebowania poszczególnych aptek.
+    \\
+    \\Przykład:
+    \begin{tcolorbox}
+    \\\# Producenci szczepionek (id $|$ nazwa $|$ dzienna produkcja)
+    \\0 $|$ BioTech 2.0 $|$ 900
+    \\1 $|$ Eko Polska 2020 $|$ 1300
+    \\2 $|$ Post-Covid Sp. z o.o. $|$ 1100
+    \\# Apteki (id $|$ nazwa $|$ dzienne zapotrzebowanie)
+    \\0 $|$ CentMedEko Centrala $|$ 450
+    \\1 $|$ CentMedEko 24h $|$ 690
+    \\2 $|$ CentMedEko Nowogrodzka $|$ 1200
+    \\\# Połączenia producentów i aptek (id producenta $|$ id apteki $|$ dzienna maksymalna liczba dostarczanych szczepionek $|$ koszt szczepionki [zł] )
+    \\0 $|$ 0 $|$ 800 $|$ 70.5
+    \\0 $|$ 1 $|$ 600 $|$ 70
+    \\0 $|$ 2 $|$ 750 $|$ 90.99
+    \\1 $|$ 0 $|$ 900 $|$ 100
+    \\1 $|$ 1 $|$ 600 $|$ 80
+    \\1 $|$ 2 $|$ 450 $|$ 70
+    \\2 $|$ 0 $|$ 900 $|$ 80
+    \\2 $|$ 1 $|$ 900 $|$ 90
+    \\2 $|$ 2 $|$ 300 $|$ 100
+    \end{tcolorbox}
+    
+    \item Dane wyjściowe
+    \\Plik z obliczoną konfiguracją
+    \\
+    \\Przykładowy fragment:
+    \begin{tcolorbox}
+    \\BioTech 2.0 $->$ CentMedEko Centrala [Koszt = 300 * 70.5 = 21150 zł]
+    \\Eko Polska 2020 $->$ CentMedEko Centrala [Koszt = 150 * 100 = 15000 zł]
+    \\...
+    \\kolejne wiersze opisujące ustalone połączenia pomiędzy producentami a aptekami
+    \\...
+    \\Opłaty całkowite: 36150 zł
+    \end{tcolorbox}
+    \\W przykadku podania złego formatu wejściowego, algorytm zwróci na konsoli informację o błędnym formacie pliku wejściowego.
+    
+\end{enumerate}
+
+\section{Scenariusz działania programu}
+Program powinien:
+\begin{enumerate}
+    \item Poprosić o wpisanie ścieżki do pliku z danymi
+    \item Znajdować ten plik i pobierać odpowiednie z niego dane
+    \item Tworzyć odpowiednią konfigurację, której wynik umieści w nowym pliku tekstowym
+\end{enumerate}
+Jeżeli w pliku wejściowym będą niepoprawnie zapisane dane, to program wyświetli błąd oraz wskaże miejsce w którym ten błąd występuje.
+
+\end{document}
